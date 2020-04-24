@@ -28,6 +28,7 @@ Ilustração da grade (o=corrente x=tensão)
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 #Impedância característica
 Z0 = 50  #Ohm
@@ -43,9 +44,15 @@ dz = 1e-3 #m
 #obs: dt <= dz/v = dz*sqrt(L*C) para estabilidade
 
 #duração da simulação (Número de passos de tempo)
-TIME = int(1e-3/dt) #s
+TIME = int(1e-1/dt) #s
 #comprimento do fio (Quantidade de pontos simulados)
-LEN = int(1/dz) #m
+LEN = int(1e-2/dz) #m
+
+#verificação de memória < 1GB porque travou meu pc uma vez
+memoria = TIME*LEN
+if (memoria > 2**30):
+    print("parâmetros consomem muita memoria: " + str(memoria/2**30) + "GB")
+    exit(1)
 
 #tensão na fonte em função do tempo
 #2*u(t)
@@ -72,3 +79,16 @@ v = np.zeros((TIME,LEN))
 v[0] = v0
 i = np.zeros((TIME,LEN))
 i[0] = i0
+
+#loop principal da simulação
+for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecidas
+    #Para tomar a tensão no ponto anterior ao analisado (fora do vetor para z=0)
+    #desloca-se o vetor para a direita e adiciona a tensão da fonte
+    i[n] = C1*( v[n-1] - np.concatenate( (Vs_t[n-1:n], v[n-1][:-1]) ) ) + C2*i[n-1]
+    #Para tomar a corrente no ponto posterior ao analisado (fora do vetor para a=l)
+    #delosca-se o vetor para a esquerda e adiciona a corrente na carga
+    v[n] = C3*( np.concatenate( (i[n][1:], v[n-1][LEN-1:LEN]/Rl) ) - i[n] ) + C4*v[n-1]
+
+plt.plot(v[TIME-1])
+plt.ylim(0,2.1)
+plt.show()
