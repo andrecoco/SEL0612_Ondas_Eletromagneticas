@@ -64,7 +64,7 @@ assert (memoria < 2**29), "parâmetros consomem muita memoria: " + str(memoria/2
 Vs_t = 2*np.ones(TIME) #V
 
 #condições iniciais
-v0 = np.zeros(LEN) #V
+v0 = np.zeros(LEN+1) #V
 i0 = np.zeros(LEN) #A
 
 #constantes uteis para a simulação
@@ -74,7 +74,7 @@ C3 = (-2*dt)/(dt*dz*G+2*dz*C)
 C4 = (2*C-dt*G)/(2*C+dt*G)
 
 #array para armazenar e processar os dados
-v = np.zeros((TIME,LEN))
+v = np.zeros((TIME,LEN+1))
 v[0] = v0
 i = np.zeros((TIME,LEN))
 i[0] = i0
@@ -83,10 +83,10 @@ i[0] = i0
 for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecidas
     #Para tomar a tensão no ponto anterior ao analisado (fora do vetor para z=0)
     #desloca-se o vetor para a direita e adiciona a tensão da fonte
-    i[n] = C1*( v[n-1] - np.concatenate( (Vs_t[n-1:n], v[n-1][:-1]) ) ) + C2*i[n-1]
+    i[n] = C1*( v[n-1][1:] - v[n-1][:-1] ) + C2*i[n-1]
     #Para tomar a corrente no ponto posterior ao analisado (fora do vetor para a=l)
     #delosca-se o vetor para a esquerda e adiciona a corrente na carga
-    v[n] = C3*( np.concatenate( (i[n][1:], v[n-1][LEN-1:LEN]/Rl) ) - i[n] ) + C4*v[n-1]
+    v[n] = C3*( np.concatenate( (i[n], [v[n-1][LEN-1]/Rl]) ) - np.concatenate(([(Vs_t[n-1]-v[n-1][0])/Rs],i[n])) ) + C4*v[n-1]
 
 plt.plot(v[TIME-1])
 plt.ylim(0)
