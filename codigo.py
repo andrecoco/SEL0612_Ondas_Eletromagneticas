@@ -12,17 +12,17 @@ Também integrado ao programa está uma animação do resultado.
 
 Ilustração da grade (o=corrente x=tensão)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+o   o   o   o   o   o   o   o   o   o   o   o   o   o   o       +
-+                                                                +
-+  x   x   x   x   x   x   x   x   x   x   x   x   x   x   x \   +
-+                                                            |   +
-+o   o   o   o   o   o   o   o   o   o   o   o   o   o   o   |dt +
-+                                                            |   +
-+  x   x   x   x   x   x   x   x   x   x   x   x   x   x   x /   +
-+                                                                +
-+o   o   o   o   o   o   o   o   o   o   o   o   o   o   o       +
-+    \---/                                                       +
-+      dz                                                        +
++o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o       +
++ |                                                     |        +
++ |x   x   x   x   x   x   x   x   x   x   x   x   x   x|    \   +
++ |                                                     |    |   +
++o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o   |dt +
++ |                                                     |    |   +
++ |x   x   x   x   x   x   x   x   x   x   x   x   x   x|    /   +
++ |                                                     |        +
++o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o       +
++ fonte      \---/                                      carga    +
++              dz                                                +
 +                                                                +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 """
@@ -37,23 +37,23 @@ Rs = 75  #Ohm
 #Resistência da carga
 Rl = 100 #Ohm
 
-#dados da linha (a especificação não deu diretamente)
-R=2500 #Ohm/m
-L=2500 #H/m
-G=1    #1/Ohm*m
-C=1    #F/m
+#dados da linha (pegamos de um par trançado comercial)
+R= 32e-3            #Ohm/m
+L= 509e-9           #H/m
+G=R/(Z0**2)         #1/Ohm*m
+C=L/(Z0**2)         #F/m
 
 #precisão do tempo
-dt = 1e-6 #s
+dt = 1e-10 #s
 #precisão do comprimento
-dz = 1e-4 #m
-assert (dt <= dz*(L*C)**(1/2))
+dz = 1e-2  #m
+assert (dt <= dz*(L*C)**(1/2)), "dt deve ser menor que " + str(dz*(L*C)**(1/2)) + " (v = "+str(1/(L*C)**(1/2))+")!"
 #dt <= dz/v = dz*sqrt(L*C) para estabilidade
 
 #duração da simulação (Número de passos de tempo)
-TIME = int(1e0/dt) #s
+TIME = int(1e-6/dt) #s
 #comprimento do fio (Quantidade de pontos simulados)
-LEN = int(1e-2/dz) #m
+LEN = int(1e0/dz) #m
 
 #verificação de memória < 512MB porque travou meu pc algumas vezes
 memoria = TIME*LEN
