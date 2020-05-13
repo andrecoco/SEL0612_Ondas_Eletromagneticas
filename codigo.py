@@ -37,22 +37,27 @@ Rs = 75  #Ohm
 #Resistência da carga
 Rl = 100 #Ohm
 
+#dados da linha (a especificação não deu diretamente)
+R=2500 #Ohm/m
+L=2500 #H/m
+G=1    #1/Ohm*m
+C=1    #F/m
+
 #precisão do tempo
 dt = 1e-6 #s
 #precisão do comprimento
-dz = 1e-3 #m
-#obs: dt <= dz/v = dz*sqrt(L*C) para estabilidade
+dz = 1e-4 #m
+assert (dt <= dz*(L*C)**(1/2))
+#dt <= dz/v = dz*sqrt(L*C) para estabilidade
 
 #duração da simulação (Número de passos de tempo)
-TIME = int(1e-1/dt) #s
+TIME = int(1e0/dt) #s
 #comprimento do fio (Quantidade de pontos simulados)
 LEN = int(1e-2/dz) #m
 
-#verificação de memória < 1GB porque travou meu pc uma vez
+#verificação de memória < 512MB porque travou meu pc algumas vezes
 memoria = TIME*LEN
-if (memoria > 2**30):
-    print("parâmetros consomem muita memoria: " + str(memoria/2**30) + "GB")
-    exit(1)
+assert (memoria < 2**29), "parâmetros consomem muita memoria: " + str(memoria/2**30) + "GB"
 
 #tensão na fonte em função do tempo
 #2*u(t)
@@ -61,12 +66,6 @@ Vs_t = 2*np.ones(TIME) #V
 #condições iniciais
 v0 = np.zeros(LEN) #V
 i0 = np.zeros(LEN) #A
-
-#dados da linha (a especificação não deu diretamente)
-R=2500 #Ohm/m
-L=2500 #H/m
-G=1    #1/Ohm*m
-C=1    #F/m
 
 #constantes uteis para a simulação
 C1 = (-2*dt)/(dt*dz*R+2*dz*L)
@@ -90,5 +89,8 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     v[n] = C3*( np.concatenate( (i[n][1:], v[n-1][LEN-1:LEN]/Rl) ) - i[n] ) + C4*v[n-1]
 
 plt.plot(v[TIME-1])
-plt.ylim(0,2.1)
+plt.ylim(0)
+plt.show()
+plt.plot(i[TIME-1])
+plt.ylim(0)
 plt.show()
