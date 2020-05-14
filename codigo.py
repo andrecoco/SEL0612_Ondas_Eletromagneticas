@@ -90,9 +90,7 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     #delosca-se o vetor para a esquerda e adiciona a corrente na carga
     v[n] = C3*( i[n][1:] - i[n][:-1] ) + C4*v[n-1]
 
-plt.plot(v[TIME-1])
-plt.ylim(0)
-plt.show()
-plt.plot(i[TIME-1])
-plt.ylim(0)
+#running mean ao longo do fio para suavizar a medida
+plt.plot(np.convolve(v[-1], np.ones(5)*(1/5), mode="valid"))
+plt.ylim(0,2.1)
 plt.show()
