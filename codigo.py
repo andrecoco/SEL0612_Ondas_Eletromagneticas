@@ -29,6 +29,7 @@ Ilustração da grade (o=corrente x=tensão)
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 #Impedância característica
 Z0 = 50  #Ohm
@@ -90,7 +91,27 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     #delosca-se o vetor para a esquerda e adiciona a corrente na carga
     v[n] = C3*( i[n][1:] - i[n][:-1] ) + C4*v[n-1]
 
-#running mean ao longo do fio para suavizar a medida
-plt.plot(np.convolve(v[-1], np.ones(5)*(1/5), mode="valid"))
-plt.ylim(0,2.1)
+from matplotlib.animation import FuncAnimation
+plt.style.use('seaborn-pastel')
+
+fig = plt.figure()
+ax = plt.axes(xlim=(0, LEN), ylim=(0, 5))
+line, = ax.plot([], [], lw=3)
+
+def init():
+    line.set_data([], [])
+    return line,
+
+def animate(n):
+    x = np.linspace(0, LEN, LEN)
+    #y = np.convolve(v[i], np.ones(5)*(1/5),mode="same")
+    y = v[n]
+    line.set_data(x, y)
+    return line,
+
+
+anim = FuncAnimation(fig, animate, init_func=init,
+                               frames=10*LEN, interval=20, blit=True)
+
+
 plt.show()
