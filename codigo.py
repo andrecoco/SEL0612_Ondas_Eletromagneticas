@@ -86,16 +86,22 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     #desloca-se o vetor para a direita e adiciona a tensão da fonte
     i[n][1:-1] = C1*( v[n-1][1:] - v[n-1][:-1] ) + C2*i[n-1][1:-1]
     i[n][0]  = (Vs_t[n-1]-v[n-1][0])/Rs
+    
     i[n][-1] = v[n-1][-1]/Rl
+    #i[n][-1] = 0   ##CASO EM CURTO (Rl == 0)
+    #i[n][-1] = i[n][-2] ##CASO ABERTO (Rl = inf)
+    
     #Para tomar a corrente no ponto posterior ao analisado (fora do vetor para a=l)
     #delosca-se o vetor para a esquerda e adiciona a corrente na carga
     v[n] = C3*( i[n][1:] - i[n][:-1] ) + C4*v[n-1]
+    #v[-1] = 0
 
 from matplotlib.animation import FuncAnimation
 plt.style.use('seaborn-pastel')
 
 fig = plt.figure()
-ax = plt.axes(xlim=(0, LEN), ylim=(0, 5))
+ax = plt.axes(xlim=(0, LEN), ylim=(-2.5, 2.5))
+ax.set_title("Tensao")
 line, = ax.plot([], [], lw=3)
 
 def init():
@@ -104,11 +110,10 @@ def init():
 
 def animate(n):
     x = np.linspace(0, LEN, LEN)
-    #y = np.convolve(v[i], np.ones(5)*(1/5),mode="same")
-    y = v[n]
+    y = np.convolve(v[n], np.ones(5)*(1/5),mode="same")
+    #y = v[n]
     line.set_data(x, y)
     return line,
-
 
 anim = FuncAnimation(fig, animate, init_func=init,
                                frames=10*LEN, interval=20, blit=True)
