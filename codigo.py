@@ -30,6 +30,7 @@ Ilustração da grade (o=corrente x=tensão)
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from graficos import plotAnimations
 
 #Impedância característica
 Z0 = 50  #Ohm
@@ -64,6 +65,9 @@ assert (memoria < 2**29), "parâmetros consomem muita memoria: " + str(memoria/2
 #2*u(t)
 Vs_t = 2*np.ones(TIME) #V
 
+#x = np.arrange(0, TIME, 1)
+#Vs_t = 3*np.sin(3*(2*np.pi/np.sqrt(L*C))*dt*x)
+
 #condições iniciais
 v0 = np.zeros(LEN) #V
 i0 = np.zeros(LEN+1) #A
@@ -88,35 +92,12 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     i[n][0]  = (Vs_t[n-1]-v[n-1][0])/Rs
     
     i[n][-1] = v[n-1][-1]/Rl
-    #i[n][-1] = 0   ##CASO EM CURTO (Rl == 0)
-    #i[n][-1] = i[n][-2] ##CASO ABERTO (Rl = inf)
+    #i[n][-1] = 0   #CASO ABERTO (Rl = inf)
+    #i[n][-1] = i[n][-2] #CASO EM CURTO (Rl == 0)
     
     #Para tomar a corrente no ponto posterior ao analisado (fora do vetor para a=l)
     #delosca-se o vetor para a esquerda e adiciona a corrente na carga
     v[n] = C3*( i[n][1:] - i[n][:-1] ) + C4*v[n-1]
     #v[-1] = 0
 
-from matplotlib.animation import FuncAnimation
-plt.style.use('seaborn-pastel')
-
-fig = plt.figure()
-ax = plt.axes(xlim=(0, LEN), ylim=(-2.5, 2.5))
-ax.set_title("Tensao")
-line, = ax.plot([], [], lw=3)
-
-def init():
-    line.set_data([], [])
-    return line,
-
-def animate(n):
-    x = np.linspace(0, LEN, LEN)
-    y = np.convolve(v[n], np.ones(5)*(1/5),mode="same")
-    #y = v[n]
-    line.set_data(x, y)
-    return line,
-
-anim = FuncAnimation(fig, animate, init_func=init,
-                               frames=10*LEN, interval=20, blit=True)
-
-
-plt.show()
+plotAnimations(i, v, LEN, TIME)
