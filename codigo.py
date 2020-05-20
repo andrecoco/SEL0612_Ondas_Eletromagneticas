@@ -56,9 +56,9 @@ TIME = int(1e-6/dt) #s
 #comprimento do fio (Quantidade de pontos simulados)
 LEN = int(1e0/dz) #m
 
-#verificação de memória < 512MB porque travou meu pc algumas vezes
-memoria = TIME*LEN
-assert (memoria < 2**29), "parâmetros consomem muita memoria: " + str(memoria/2**30) + "GB"
+#verificação de memória < 1GB porque travou meu pc algumas vezes
+memoria = TIME*LEN*8 # 8 é o número de bytes no float64 do nparray
+assert (memoria < 2**30), "parâmetros consomem muita memoria: " + str(memoria/2**30) + "GB"
 
 #tensão na fonte em função do tempo
 #2*u(t)
@@ -86,11 +86,11 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     #desloca-se o vetor para a direita e adiciona a tensão da fonte
     i[n][1:-1] = C1*( v[n-1][1:] - v[n-1][:-1] ) + C2*i[n-1][1:-1]
     i[n][0]  = (Vs_t[n-1]-v[n-1][0])/Rs
-    
+
     i[n][-1] = v[n-1][-1]/Rl
     #i[n][-1] = 0   ##CASO EM CURTO (Rl == 0)
     #i[n][-1] = i[n][-2] ##CASO ABERTO (Rl = inf)
-    
+
     #Para tomar a corrente no ponto posterior ao analisado (fora do vetor para a=l)
     #delosca-se o vetor para a esquerda e adiciona a corrente na carga
     v[n] = C3*( i[n][1:] - i[n][:-1] ) + C4*v[n-1]
@@ -120,3 +120,5 @@ anim = FuncAnimation(fig, animate, init_func=init,
 
 
 plt.show()
+
+print(type(v[0][0]))
