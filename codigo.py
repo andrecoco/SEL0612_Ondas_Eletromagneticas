@@ -140,5 +140,4 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     #delosca-se o vetor para a esquerda e adiciona a corrente na carga
     v[n] = C3*( i[n][1:] - i[n][:-1] ) + C4*v[n-1]
 
-
 plotAnimations(i, v, LEN, TIME, dz, tomarMedia, velocidade, intervalo)
