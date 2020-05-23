@@ -37,12 +37,12 @@ from graficos import plotAnimations
 # 1 - 100 ohm
 # 2 - 0 ohm (Curto)
 # 3 - inf ohm (Circuito Aberto)
-carga = 2
+carga = 3
 
 #Escolha da Fonte
-# 1 - 2*u(t) 
+# 1 - 2*u(t)
 # 2 - u(t) - u(t - l/10uf)
-fonte = 1
+fonte = 2
 
 ######################### CONFIGURACOES DA ANIMACAO ###########################
 #Tomar media de pontos proximos para reduzir ruido (filtro de média)
@@ -65,7 +65,7 @@ intervalo = 100 #ms
 ###############################################################################
 
 assert (carga >= 1 and carga <= 3), "Configuracao de Carga Invalida!"
-assert (fonte >= 1 and carga <= 2), "Configuracao de Fonte Invalida!"
+assert (fonte >= 1 and fonte <= 2), "Configuracao de Fonte Invalida!"
 
 #Impedância característica
 Z0 = 50  #Ohm
@@ -74,7 +74,7 @@ Rs = 75  #Ohm
 #Resistência da carga
 Rl = 100 #Ohm
 
-#Dados da linha (pegamos de um par trançado comercial)
+#Dados da linha
 R= 0            #Ohm/m
 L= 185e-9       #H/m
 G= R/(Z0**2)     #1/Ohm*m
@@ -95,9 +95,9 @@ LEN = int(l/dz) #pontos
 #tempo suficiente para ir ou voltar 10 vezes na linha
 TIME = 10*int((l/uf)/dt) #pontos
 
-#verificação de memória < 2GB (para nao dar problema no PC) 
+#verificação de memória < 2GB (para nao dar problema no PC)
 memoria = TIME*LEN*8*2
-assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memoria/2*(2**30)) + "GB"
+assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memoria/(2**30)) + "GB"
 
 #tensão na fonte em função do tempo
 if(fonte == 1):
@@ -128,7 +128,7 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     #desloca-se o vetor para a direita e adiciona a tensão da fonte
     i[n][1:-1] = C1*( v[n-1][1:] - v[n-1][:-1] ) + C2*i[n-1][1:-1]
     i[n][0]  = (Vs_t[n-1]-v[n-1][0])/Rs
-    
+
     if(carga == 1):
         i[n][-1] = v[n-1][-1]/Rl
     elif(carga == 2):
