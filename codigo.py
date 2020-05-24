@@ -37,35 +37,35 @@ from graficos import plotAnimations
 # 1 - 100 ohm
 # 2 - 0 ohm (Curto)
 # 3 - inf ohm (Circuito Aberto)
-carga = 3
+carga = 2
 
 #Escolha da Fonte
-# 1 - 2*u(t)
+# 1 - 2*u(t) 
 # 2 - u(t) - u(t - l/10uf)
-fonte = 2
+fonte = 1
 
 ######################### CONFIGURACOES DA ANIMACAO ###########################
 #Tomar media de pontos proximos para reduzir ruido (filtro de média)
-#   pode causar distorções nos pontos extremos
-tomarMedia = False
+#   pode causar distorções nos pontos extremos.
+tomarMedia = False  #(False/True)
 
 #A velocidade determina o numero de pontos considerados na hora de atualizar
 #   a animação, velocidade = n quer dizer que somente um ponto a cada n no
 #   tempo serão considerados na animação. velocidade = 1 quer dizer que todos
-#   os pontos no tempo serão considerados
+#   os pontos no tempo serão considerados.
 #   OBS: Deve ser um valor inteiro!
 velocidade = 8
 
 #O intervalo determina quantos ms ocorrem entre cada atualização da animação
-#   um intervalor muito pequeno pode causar problemas de desempenho ao mostrar
-#   a animação. Já um valor muito alto pode causar uma animação "travada"
+#   um intervalo muito pequeno pode causar problemas de desempenho ao mostrar
+#   a animação. Já um valor muito alto pode causar uma animação "travada".
 #   OBS: Deve ser um valor inteiro!
 intervalo = 100 #ms
 
 ###############################################################################
 
 assert (carga >= 1 and carga <= 3), "Configuracao de Carga Invalida!"
-assert (fonte >= 1 and fonte <= 2), "Configuracao de Fonte Invalida!"
+assert (fonte >= 1 and carga <= 2), "Configuracao de Fonte Invalida!"
 
 #Impedância característica
 Z0 = 50  #Ohm
@@ -92,12 +92,12 @@ assert (dt <= dz*(L*C)**(1/2)), "dt deve ser menor que " + str(dz*(L*C)**(1/2)) 
 LEN = int(l/dz) #pontos
 
 #duração da simulação (Número de passos de tempo)
-#tempo suficiente para ir ou voltar 10 vezes na linha
+#tempo suficiente para percorrer 10 vezes a linha de transmissão
 TIME = 10*int((l/uf)/dt) #pontos
 
-#verificação de memória < 2GB (para nao dar problema no PC)
+#verificação de memória < 2GB (para nao dar problema no PC) 
 memoria = TIME*LEN*8*2
-assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memoria/(2**30)) + "GB"
+assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memoria/2*(2**30)) + "GB"
 
 #tensão na fonte em função do tempo
 if(fonte == 1):
@@ -128,7 +128,7 @@ for n in range(1,TIME): #começa em 1 porque condições iniciais são conhecida
     #desloca-se o vetor para a direita e adiciona a tensão da fonte
     i[n][1:-1] = C1*( v[n-1][1:] - v[n-1][:-1] ) + C2*i[n-1][1:-1]
     i[n][0]  = (Vs_t[n-1]-v[n-1][0])/Rs
-
+    
     if(carga == 1):
         i[n][-1] = v[n-1][-1]/Rl
     elif(carga == 2):

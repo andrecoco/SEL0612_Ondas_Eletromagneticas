@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from matplotlib.animation import FuncAnimation
 from matplotlib.pylab import *
 
 def plotAnimations(i, v, LEN, TIME, dz, tomarMedia, velocidade, intervalo):
@@ -168,5 +167,3 @@ def plotAnimations(i, v, LEN, TIME, dz, tomarMedia, velocidade, intervalo):
     simulation = animation.FuncAnimation(anim, updateData, blit=True, frames=TIME//velocidade, interval=intervalo, repeat=False)
 
     plt.show()
-    # Descomente a próxima linha se deseja salvar a animação
-    # simulation.save(filename='animacao.mp4',fps=30,dpi=300)
