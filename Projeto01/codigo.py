@@ -37,7 +37,7 @@ from graficos import plotAnimations
 # 1 - 100 ohm
 # 2 - 0 ohm (Curto)
 # 3 - inf ohm (Circuito Aberto)
-carga = 2
+carga = 1
 
 #Escolha da Fonte
 # 1 - 2*u(t) 
@@ -65,7 +65,7 @@ intervalo = 100 #ms
 ###############################################################################
 
 assert (carga >= 1 and carga <= 3), "Configuracao de Carga Invalida!"
-assert (fonte >= 1 and carga <= 2), "Configuracao de Fonte Invalida!"
+assert (fonte >= 1 and fonte <= 2), "Configuracao de Fonte Invalida!"
 
 #Impedância característica
 Z0 = 50  #Ohm
@@ -97,7 +97,7 @@ TIME = 10*int((l/uf)/dt) #pontos
 
 #verificação de memória < 2GB (para nao dar problema no PC) 
 memoria = TIME*LEN*8*2
-assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memoria/2*(2**30)) + "GB"
+assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memoria/(2**30)) + "GB"
 
 #tensão na fonte em função do tempo
 if(fonte == 1):
