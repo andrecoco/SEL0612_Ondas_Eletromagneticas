@@ -9,6 +9,7 @@ import cmath
 import scipy.constants
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 C = scipy.constants.c
 PI = math.pi
 
@@ -24,7 +25,7 @@ def velocidade_fase(S, N):
     S - Fator de Courrant
     N - Densidade da grade
     """
-    return (2*PI*C/N)*(1/(cmath.acos(1+1/(S**2)*(math.cos(2*PI*S/N)-1)))).real
+    return (2*PI*C/N)*(1/(cmath.acos(1+1/(S**2)*(math.cos(2*PI*S/N)-1))).real)
 
 def atenuacao(S, N):
     """
@@ -46,11 +47,42 @@ for i, n in enumerate(Ns):
 
 erros = abs(1-velocidades)*100
 
-plt.plot(Ns, velocidades)
-plt.ylim(0)
-plt.show()
-plt.plot(Ns, atenuacoes)
-plt.ylim(0)
-plt.show()
-plt.semilogy(Ns, erros)
+##### Plot do gráfico #####
+
+#Configura a figura
+fig, plotAtenuacao = plt.subplots()
+fig.canvas.set_window_title('Nome da Figura')
+fig.suptitle('Titulo da Figura', fontsize=16)
+plotVelocidade = plotAtenuacao.twinx()
+
+#Plota os dois graficos
+plotVelocidade.plot(Ns, velocidades, 'g-')
+plotAtenuacao.plot(Ns, atenuacoes, '--')
+
+# Seta os limites para o eixo x
+plotAtenuacao.set_xlim(1,10)
+
+# Seta os limites para os eixos y
+plotVelocidade.set_ylim(0, 2)
+plotAtenuacao.set_ylim(0, 6)
+
+#Seta os ticks
+plotAtenuacao.xaxis.set_major_locator(ticker.AutoLocator())
+plotAtenuacao.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+
+plotAtenuacao.yaxis.set_major_locator(ticker.AutoLocator())
+plotAtenuacao.yaxis.set_minor_locator(ticker.AutoMinorLocator())
+
+plotVelocidade.yaxis.set_major_locator(ticker.AutoLocator())
+plotVelocidade.yaxis.set_minor_locator(ticker.AutoMinorLocator())
+
+#Coloca um texto acima de cada gráfico
+plotVelocidade.text(4, 1.05, 'Velocidade de Fase da Onda Numérica')
+plotAtenuacao.text(3, 1.10, 'Constante de Atenuação')
+
+#Nomeia os eixos
+plotAtenuacao.set_xlabel('Densidade da Grade (points per free-space wavelength)')
+plotVelocidade.set_ylabel('Velocidade de Fase da Onda Numérica (normalizada em c)')
+plotAtenuacao.set_ylabel('Constante de Atenuação (neppers/grid cell)')
+
 plt.show()
