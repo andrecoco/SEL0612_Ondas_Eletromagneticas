@@ -67,12 +67,18 @@ plotVelocidade.set_ylim(0, 2)
 plotAtenuacao.set_ylim(0, 6)
 
 #Seta os ticks
+plotAtenuacao.xaxis.set_tick_params(which="major", top = True, direction = "in")
+plotAtenuacao.xaxis.set_tick_params(which="minor", top = True, direction = "in")
 plotAtenuacao.xaxis.set_major_locator(ticker.AutoLocator())
 plotAtenuacao.xaxis.set_minor_locator(ticker.AutoMinorLocator())
 
+plotAtenuacao.yaxis.set_tick_params(which="major", left = True, direction = "in")
+plotAtenuacao.yaxis.set_tick_params(which="minor", left = True, direction = "in")
 plotAtenuacao.yaxis.set_major_locator(ticker.AutoLocator())
 plotAtenuacao.yaxis.set_minor_locator(ticker.AutoMinorLocator())
 
+plotVelocidade.yaxis.set_tick_params(which="major", right = True, direction = "in")
+plotVelocidade.yaxis.set_tick_params(which="minor", right = True, direction = "in")
 plotVelocidade.yaxis.set_major_locator(ticker.AutoLocator())
 plotVelocidade.yaxis.set_minor_locator(ticker.AutoMinorLocator())
 
