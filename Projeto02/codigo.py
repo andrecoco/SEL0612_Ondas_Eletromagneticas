@@ -38,8 +38,9 @@ def calculo(S=S, S_REFRAC=S_REFRAC):
     #E_t[0:int(0.2*(L/c)/DT)] = 1
 
     # Pulso gaussiano
-    E_t = np.zeros(TIME)    # V/m
     comprimento = int(((L/c)/DT))
+    assert TIME > comprimento, "A implementação da gaussiana exige simulação mais longa"
+    E_t = np.zeros(TIME)    # V/m
     pulso = np.linspace(-3, 3, num=comprimento)
     pulso = np.exp(-(pulso)**2)
     E_t[:comprimento] = pulso
