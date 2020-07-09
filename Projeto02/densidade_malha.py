@@ -14,7 +14,8 @@ C = scipy.constants.c
 PI = math.pi
 
 NUM_PONTOS = 1000
-S = 0.5
+#S = 0.5
+S = 1/(2**0.5)
 MIN_N = 1
 MAX_N = 80
 
@@ -57,7 +58,7 @@ plotVelocidade = plotAtenuacao.twinx()
 
 fig2, plotErro = plt.subplots()
 fig2.canvas.set_window_title('Figura 2')
-fig2.suptitle('Erro da Velocidade de Fase', fontsize=14)
+fig2.suptitle('Erro da Velocidade de Fase' , fontsize=14)
 
 #Plota os dados
 plotVelocidade.plot(Ns, velocidades, 'g-', color = 'red')

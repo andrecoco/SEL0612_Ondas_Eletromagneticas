@@ -8,25 +8,32 @@ import numpy as np
 from scipy.constants import c
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-# Configurações da simulação
+########### Configurações da simulação #########
 L = 1               # Comprimento do espaço em metros
-T = 1*L/c         # Tempo da simulação em segundos
-S = 0.5             # Fator de estabilidade de Courrant
+T = 1*L/c           # Tempo da simulação em segundos
+S = 1.0005               # Fator de estabilidade de Courrant
 S_REFRAC = 0.25     # "Fator de courrant" do segundo meio
 TRANSICAO = 1       # Ponto a partir do qual começa o segundo meio
-DX = 5e-3           # Precisão do comprimento
+DX = 5e-3           # Precisão do comprimento   
 LEN = int(L/DX)     # Quantidade de pontos do espaço simulados (automático)
+
+#Configuracoes do grafico1
+YMin = None
+YMax = None
+plotarS1 = False    # Plotar um outro gráfico pontilhado para S = 1
+
+#Comfiguracoes do grafico2 [ variando o n (TIME) ]
+plotGrafico2 = True    # Define se o grafico variando o n sera plotado (as configuracoes do grafico 1 sera ignoradas)
 # As constantes ligadas ao tempo são determinadas por S
+#################################################
 
 def calculo(S=S, S_REFRAC=S_REFRAC):
     """
     Função que realiza loop principal da simulação
     """
-
     # Constantes importantes para a simulação
     DT = S*DX/c         # passo de tempo
     TIME = int(T/DT)    # duração da simulação (Número de passos de tempo)
-
     # Verificação de memória < 2GB (para nao dar problema no PC)
     memoria = TIME*LEN*8
     assert (memoria < 2*(2**30)), ("parâmetros consomem muita memoria: "
@@ -38,10 +45,9 @@ def calculo(S=S, S_REFRAC=S_REFRAC):
     #E_t[0:int(0.2*(L/c)/DT)] = 1
 
     # Pulso gaussiano
-    comprimento = int(((L/c)/DT))
-    assert TIME > comprimento, "A implementação da gaussiana exige simulação mais longa"
     E_t = np.zeros(TIME)    # V/m
-    pulso = np.linspace(-3, 3, num=comprimento)
+    comprimento = int(((L/c)/DT))
+    pulso = np.linspace(-3.3, 3.3, num=comprimento)
     pulso = np.exp(-(pulso)**2)
     E_t[:comprimento] = pulso
 
@@ -68,36 +74,95 @@ def calculo(S=S, S_REFRAC=S_REFRAC):
 
     return E
 
-
 ##### Plot do gráfico #####
 # Configura a figura
 fig, plotPulsos = plt.subplots()
-fig.canvas.set_window_title('Nome da Figura')
-fig.suptitle('Titulo da Figura', fontsize=16)
+fig.canvas.set_window_title('Figura')
+fig.suptitle('Propagação do Pulso', fontsize=16)
 
 # Plota os dados
-plotPulsos.plot(calculo()[-1], color='black', label='S = ' + str(S))
-plotPulsos.plot(calculo(S=1, S_REFRAC=1)[-1],
-                '--', color='black', label='S = 1')
+#Verifica se existe uma interface (dois meios distintos)
+if(not plotGrafico2):
+    if(TRANSICAO == 1): 
+        if(plotarS1):
+            plotPulsos.plot(calculo(S=1, S_REFRAC=1)[-1],
+                            '--', color='black', label='S = 1')
+        plotPulsos.plot(calculo()[-1], color='C0', label='S = ' + str(S))
+        # Legenda
+        plt.legend()
+    else:
+        plt.axvline(x=TRANSICAO*LEN, linestyle = '--' ,color = 'black')
+        plotPulsos.plot(calculo()[-1], color='C0')
+    
+    # Seta os limites para o eixo x
+    plotPulsos.set_xlim(0, LEN)
 
-# Legenda
-plt.legend()
+    # Seta os limites para o eixo y
+    if(YMin != None and YMax != None):
+        plotPulsos.set_ylim(YMin, YMax)
+    
+    # Seta os ticks
+    plotPulsos.xaxis.set_tick_params(which="major", top=True, direction="in")
+    plotPulsos.xaxis.set_tick_params(which="minor", top=True, direction="in")
+    plotPulsos.xaxis.set_major_locator(ticker.AutoLocator())
+    plotPulsos.xaxis.set_minor_locator(ticker.AutoMinorLocator())
 
-# Seta os limites para o eixo x
-plotPulsos.set_xlim(0, 200)
+    plotPulsos.yaxis.set_tick_params(which="major", right=True, direction="in")
+    plotPulsos.yaxis.set_tick_params(which="minor", right=True, direction="in")
+    plotPulsos.yaxis.set_major_locator(ticker.AutoLocator())
+    plotPulsos.yaxis.set_minor_locator(ticker.AutoMinorLocator())
 
-# Seta os limites para o eixo y
-plotPulsos.set_ylim(-0.2, 1.4)
+    #Nomeia os eixos
+    plotPulsos.set_xlabel('Coordenada i na Grade')
+    plotPulsos.set_ylabel('Função de Onda u(i)')
 
-# Seta os ticks
-plotPulsos.xaxis.set_tick_params(which="major", top=True, direction="in")
-plotPulsos.xaxis.set_tick_params(which="minor", top=True, direction="in")
-plotPulsos.xaxis.set_major_locator(ticker.AutoLocator())
-plotPulsos.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+else: #Caso a escolha seja plotar o grafico com TIME variando
+    fig2, plotPulsos2 = plt.subplots()
+    fig2.canvas.set_window_title('Figura')
+    fig.suptitle('Propagação do Pulso Variando o TIME (S = ' + str(S) + ')', fontsize=12)
+    fig2.suptitle('Propagação do Pulso Variando o TIME com Foco no Início (S = ' + str(S) + ')', fontsize=12)
+    T = 1.205*L/c
+    plotPulsos.plot(calculo()[-1], color='C2', label='TIME = ' + str(int(T/(S*DX/c))))
+    plotPulsos2.plot(calculo()[-1], color='C2', label='TIME = ' + str(int(T/(S*DX/c))))
+    T = 1.255*L/c
+    plotPulsos.plot(calculo()[-1], color='C1', label='TIME = ' + str(int(T/(S*DX/c))))
+    plotPulsos2.plot(calculo()[-1], color='C1', label='TIME = ' + str(int(T/(S*DX/c))))
+    T = 1.305*L/c
+    plotPulsos.plot(calculo()[-1], color='C0', label='TIME = ' + str(int(T/(S*DX/c))))
+    plotPulsos2.plot(calculo()[-1], color='C0', label='TIME = ' + str(int(T/(S*DX/c))))
+    plotPulsos2.legend()
+    plotPulsos.legend()
+    
+    # Seta os limites para o eixo x
+    plotPulsos.set_xlim(0, LEN)
+    plotPulsos2.set_xlim(0, LEN/10)
 
-plotPulsos.yaxis.set_tick_params(which="major", right=True, direction="in")
-plotPulsos.yaxis.set_tick_params(which="minor", right=True, direction="in")
-plotPulsos.yaxis.set_major_locator(ticker.AutoLocator())
-plotPulsos.yaxis.set_minor_locator(ticker.AutoMinorLocator())
+    # Seta os limites para o eixo y
+    plotPulsos2.set_ylim(-0.05, 0.05)
+
+    # Seta os ticks
+    plotPulsos.xaxis.set_tick_params(which="major", top=True, direction="in")
+    plotPulsos.xaxis.set_tick_params(which="minor", top=True, direction="in")
+    plotPulsos.xaxis.set_major_locator(ticker.AutoLocator())
+    plotPulsos.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+    plotPulsos2.xaxis.set_tick_params(which="major", top=True, direction="in")
+    plotPulsos2.xaxis.set_tick_params(which="minor", top=True, direction="in")
+    plotPulsos2.xaxis.set_major_locator(ticker.AutoLocator())
+    plotPulsos2.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+
+    plotPulsos.yaxis.set_tick_params(which="major", right=True, direction="in")
+    plotPulsos.yaxis.set_tick_params(which="minor", right=True, direction="in")
+    plotPulsos.yaxis.set_major_locator(ticker.AutoLocator())
+    plotPulsos.yaxis.set_minor_locator(ticker.AutoMinorLocator())
+    plotPulsos2.yaxis.set_tick_params(which="major", right=True, direction="in")
+    plotPulsos2.yaxis.set_tick_params(which="minor", right=True, direction="in")
+    plotPulsos2.yaxis.set_major_locator(ticker.AutoLocator())
+    plotPulsos2.yaxis.set_minor_locator(ticker.AutoMinorLocator())
+
+    #Nomeia os eixos
+    plotPulsos.set_xlabel('Coordenada i na Grade')
+    plotPulsos.set_ylabel('Função de Onda u(i)')
+    plotPulsos2.set_xlabel('Coordenada i na Grade')
+    plotPulsos2.set_ylabel('Função de Onda u(i)')
 
 plt.show()
