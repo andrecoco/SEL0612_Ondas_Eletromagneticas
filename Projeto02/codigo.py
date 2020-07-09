@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 # Configurações da simulação
 L = 1               # Comprimento do espaço em metros
-T = 0.8*L/c         # Tempo da simulação em segundos
+T = 1*L/c         # Tempo da simulação em segundos
 S = 0.5             # Fator de estabilidade de Courrant
 S_REFRAC = 0.25     # "Fator de courrant" do segundo meio
 TRANSICAO = 1       # Ponto a partir do qual começa o segundo meio
@@ -34,12 +34,15 @@ def calculo(S=S, S_REFRAC=S_REFRAC):
 
     # Campo na fonte em função do tempo
     # Pulso retangular
-    E_t = np.zeros(TIME)    # V/m
-    E_t[0:int(0.2*(L/c)/DT)] = 1
+    #E_t = np.zeros(TIME)    # V/m
+    #E_t[0:int(0.2*(L/c)/DT)] = 1
 
     # Pulso gaussiano
-    #E_t = np.linspace(-0.5*TIME, 0.5*TIME, num=TIME)
-    #E_t = np.exp(-(E_t/20)**2)
+    E_t = np.zeros(TIME)    # V/m
+    comprimento = int(((L/c)/DT))
+    pulso = np.linspace(-3, 3, num=comprimento)
+    pulso = np.exp(-(pulso)**2)
+    E_t[:comprimento] = pulso
 
     # Condições iniciais
     E0 = np.zeros(LEN+2)  # V/m
