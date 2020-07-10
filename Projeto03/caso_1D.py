@@ -88,20 +88,20 @@ for n in range(1, TIME): # Começa em 1 porque condições iniciais são conheci
 ###### Plot dos Graficos ######
 fig1, ax1 = plt.subplots()
 fig2, ax2 = plt.subplots()
-fig1.canvas.set_window_title('Figura1')
-fig1.suptitle('Subtitulo Fig1', fontsize=12)
-fig2.canvas.set_window_title('Figura2')
-fig2.suptitle('Subtitulo Fig2', fontsize=12)
+fig1.canvas.set_window_title('Ez')
+fig1.suptitle('Componente z do Campo E', fontsize=12)
+fig2.canvas.set_window_title('Hy')
+fig2.suptitle('Componente y do Campo H', fontsize=12)
 
 #Plota FIG1
-ax1.plot(np.linspace(0, l, num=LEN+1), Ez[-1])
-ax1.set_xlabel('x')
-ax1.set_ylabel('y')
+ax1.plot(np.linspace(0, l, num=LEN+1), Ez[-1], 'r-')
+ax1.set_xlabel('Comprimento (m)')
+ax1.set_ylabel('Campo Elétrico (V/m)')
 
 #Plota FIG2
-ax2.plot(np.linspace(0, l, num=LEN), Hy[-1])
-ax2.set_xlabel('x')
-ax2.set_ylabel('y')
+ax2.plot(np.linspace(0, l, num=LEN), Hy[-1], 'b-')
+ax2.set_xlabel('Comprimento (m)')
+ax2.set_ylabel('Campo Magnético (Tesla)')
 
 ax2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.show()

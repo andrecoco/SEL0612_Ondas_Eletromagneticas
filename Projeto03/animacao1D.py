@@ -17,8 +17,8 @@ def plotAnimations(Ez, Hy, LEN, l, TIME, velocidade = 5, intervalo = 20):
     HAnim = plt.subplot2grid((2, 1), (1, 0), fig=anim)
 
     # Configura os titulos dos subplots
-    EAnim.set_title('Ez')
-    HAnim.set_title('Hy')
+    EAnim.set_title('Componente z do Campo E')
+    HAnim.set_title('Componente y do Campo H')
 
     # Seta os limites para o eixo y
     EAnim.set_ylim(-1.5,1.5)
@@ -37,10 +37,10 @@ def plotAnimations(Ez, Hy, LEN, l, TIME, velocidade = 5, intervalo = 20):
     HAnim.grid(True)
 
     # Nomeia os eixos
-    EAnim.set_xlabel("Ez EixoX")
-    EAnim.set_ylabel("Ez EixoY")
-    HAnim.set_xlabel("Hy EixoX")
-    HAnim.set_ylabel("Hy EixoY")
+    EAnim.set_xlabel("Comprimento (m)")
+    EAnim.set_ylabel("Campo Elétrico (V/m)")
+    HAnim.set_xlabel("Comprimento (m)")
+    HAnim.set_ylabel("Campo Magnético (Tesla)")
 
     # Vetores utilizados como eixo x
     EzEixoX= np.arange(LEN+1)

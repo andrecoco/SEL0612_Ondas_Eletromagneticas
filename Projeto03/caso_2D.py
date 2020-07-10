@@ -39,8 +39,8 @@ SIGMA = 0               # Condutividade do meio
 SIGMA_STAR = 0          # Perda magnética equivalente
 EPSILON = epsilon_0     # Permissividade elétrica do meio
 MU = mu_0               # Permeabilidade magnética do meio
-AnimZmax = 1            # Valor mínimo do eixo Z da animação (deixe como None para não fixar limite algum)
-AnimZmin = -1           # Valor máximo do eixo Z da animação
+AnimZmax = 0.8            # Valor mínimo do eixo Z da animação (deixe como None para não fixar limite algum)
+AnimZmin = -0.8           # Valor máximo do eixo Z da animação
 
 #precisão do comprimento
 dx = 1e-2  # m
@@ -58,11 +58,11 @@ assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memor
 
 # Ez no centro da grade
 # Pulso retangular
-Ez_t = np.zeros(TIME)
-Ez_t[0:int(0.1*(l/c)/dt)] = 1
+#Ez_t = np.zeros(TIME)
+#Ez_t[0:int(0.1*(l/c)/dt)] = 1
 # Onda senoidal
-#Ez_t = np.linspace(0, 2*np.pi, num=TIME)
-#Ez_t = np.sin(2*Ez_t*(TIME/(0.5*(l/c)/dt)))
+Ez_t = np.linspace(0, 2*np.pi, num=TIME)
+Ez_t = np.sin(2*Ez_t*(TIME/(0.5*(l/c)/dt)))
 
 # Condições iniciais
 Ez0 = np.zeros((LEN+1, LEN+1))
@@ -106,7 +106,7 @@ for n in range(1, TIME): # Começa em 1 porque condições iniciais são conheci
 COR = 'seismic'
 
 #Gera a animacao
-animacao2D.plotAnimations(Ez, LEN, TIME, AnimZmax, AnimZmin)
+animacao2D.plotAnimations(Ez, LEN, TIME, AnimZmin, AnimZmax)
 
 #Cria as Figuras Estaticas
 fig1, ax1 = plt.subplots()
@@ -114,13 +114,13 @@ fig2, ax2 = plt.subplots()
 fig3, ax3 = plt.subplots()
 fig4, ax4 = plt.subplots()
 fig1.canvas.set_window_title('Ez')
-fig1.suptitle('Subtitulo Fig1', fontsize=12)
+fig1.suptitle('Componente z do Campo E', fontsize=12)
 fig2.canvas.set_window_title('Hx')
-fig2.suptitle('Subtitulo Fig2', fontsize=12)
-fig3.canvas.set_window_title('Hz')
-fig3.suptitle('Subtitulo Fig3', fontsize=12)
+fig2.suptitle('Componente x do Campo H', fontsize=12)
+fig3.canvas.set_window_title('Hy')
+fig3.suptitle('Componente y do Campo H', fontsize=12)
 fig4.canvas.set_window_title('Ez 3D')
-fig4.suptitle('Subtitulo Fig4', fontsize=12)
+fig4.suptitle('Componente z do Campo E (visualização em 3D)', fontsize=12)
 
 #Plota FIG1
 maxval = np.max(abs(Ez[-1]))
@@ -152,7 +152,7 @@ ax4 = plt.axes(projection='3d')
 ax4.plot_surface(X, Y, Z, rcount = 200 , ccount = 200,  cmap=COR)
 ax4.set_xlabel('x')
 ax4.set_ylabel('y')
-ax4.set_zlabel('z')
+ax4.set_zlabel('V/m')
 
 plt.show()
 
