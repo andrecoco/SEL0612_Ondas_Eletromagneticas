@@ -54,7 +54,6 @@ TIME = int(1.5*(l/c)/dt) #pontos
 memoria = TIME*LEN*8*2
 assert (memoria < 2*(2**30)), "parâmetros consomem muita memoria: " + str(memoria/(2**30)) + "GB"
 
-
 # Campo na borda esquerda
 # Pulso retangular
 Ez_t = np.zeros(TIME)

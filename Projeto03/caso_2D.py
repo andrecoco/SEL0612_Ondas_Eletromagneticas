@@ -34,13 +34,13 @@ from scipy.constants import c, mu_0, epsilon_0
 import matplotlib.pyplot as plt
 import animacao2D
 
-import matplotlib.cm as cm
-
 l = 1e0                 # Comprimento do espaço em metros
 SIGMA = 0               # Condutividade do meio
 SIGMA_STAR = 0          # Perda magnética equivalente
 EPSILON = epsilon_0     # Permissividade elétrica do meio
 MU = mu_0               # Permeabilidade magnética do meio
+AnimZmax = 1            # Valor mínimo do eixo Z da animação (deixe como None para não fixar limite algum)
+AnimZmin = -1           # Valor máximo do eixo Z da animação
 
 #precisão do comprimento
 dx = 1e-2  # m
@@ -105,7 +105,10 @@ for n in range(1, TIME): # Começa em 1 porque condições iniciais são conheci
 ###### PLOT dos Gráficos ######
 COR = 'seismic'
 
-#Cria as Figuras
+#Gera a animacao
+animacao2D.plotAnimations(Ez, LEN, TIME, AnimZmax, AnimZmin)
+
+#Cria as Figuras Estaticas
 fig1, ax1 = plt.subplots()
 fig2, ax2 = plt.subplots()
 fig3, ax3 = plt.subplots()
@@ -146,7 +149,6 @@ y = np.linspace(-100, 100, 101)
 X, Y = np.meshgrid(x, y)
 Z = Ez[-1]
 ax4 = plt.axes(projection='3d')
-#ax4.contour3D(X, Y, Z, 50, cmap=COR)
 ax4.plot_surface(X, Y, Z, rcount = 200 , ccount = 200,  cmap=COR)
 ax4.set_xlabel('x')
 ax4.set_ylabel('y')
