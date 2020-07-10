@@ -32,6 +32,9 @@ Ilustração da grade (o=corrente x=tensão)
 import numpy as np
 from scipy.constants import c, mu_0, epsilon_0
 import matplotlib.pyplot as plt
+import animacao2D
+
+import matplotlib.cm as cm
 
 l = 1e0                 # Comprimento do espaço em metros
 SIGMA = 0               # Condutividade do meio
@@ -99,19 +102,56 @@ for n in range(1, TIME): # Começa em 1 porque condições iniciais são conheci
     Hy[n] = DA*Hy[n-1] + DB*(Ez[n, 1:, :] - Ez[n, :-1, :])
 
 
+###### PLOT dos Gráficos ######
 COR = 'seismic'
 
+#Cria as Figuras
+fig1, ax1 = plt.subplots()
+fig2, ax2 = plt.subplots()
+fig3, ax3 = plt.subplots()
+fig4, ax4 = plt.subplots()
+fig1.canvas.set_window_title('Ez')
+fig1.suptitle('Subtitulo Fig1', fontsize=12)
+fig2.canvas.set_window_title('Hx')
+fig2.suptitle('Subtitulo Fig2', fontsize=12)
+fig3.canvas.set_window_title('Hz')
+fig3.suptitle('Subtitulo Fig3', fontsize=12)
+fig4.canvas.set_window_title('Ez 3D')
+fig4.suptitle('Subtitulo Fig4', fontsize=12)
+
+#Plota FIG1
 maxval = np.max(abs(Ez[-1]))
-plt.imshow(Ez[-1], cmap=COR, vmin=-maxval, vmax=maxval)
-plt.colorbar()
-plt.show()
+colormap = ax1.imshow(Ez[-1], cmap=COR, vmin=-maxval, vmax=maxval)
+ax1.set_xlabel('x')
+ax1.set_ylabel('y')
+fig1.colorbar(colormap)
 
+#Plota FIG2
 maxval = np.max(abs(Hx[-1]))
-plt.imshow(Hx[-1], cmap=COR, vmin=-maxval, vmax=maxval)
-plt.colorbar()
+colormap = ax2.imshow(Hx[-1], cmap=COR, vmin=-maxval, vmax=maxval)
+ax2.set_xlabel('x')
+ax2.set_ylabel('y')
+fig2.colorbar(colormap)
+
+#Plota FIG3
+maxval = np.max(abs(Hy[-1]))
+colormap = ax3.imshow(Hy[-1], cmap=COR, vmin=-maxval, vmax=maxval)
+ax3.set_xlabel('x')
+ax3.set_ylabel('y')
+fig3.colorbar(colormap)
+
+#Plota FIG4
+x = np.linspace(-100, 100, 101)
+y = np.linspace(-100, 100, 101)
+X, Y = np.meshgrid(x, y)
+Z = Ez[-1]
+ax4 = plt.axes(projection='3d')
+#ax4.contour3D(X, Y, Z, 50, cmap=COR)
+ax4.plot_surface(X, Y, Z, rcount = 200 , ccount = 200,  cmap=COR)
+ax4.set_xlabel('x')
+ax4.set_ylabel('y')
+ax4.set_zlabel('z')
+
 plt.show()
 
-maxval = np.max(abs(Hy[-1]))
-plt.imshow(Hy[-1], cmap=COR, vmin=-maxval, vmax=maxval)
-plt.colorbar()
-plt.show()
+
