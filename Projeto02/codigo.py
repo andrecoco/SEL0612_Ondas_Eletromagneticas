@@ -11,7 +11,7 @@ import matplotlib.ticker as ticker
 ########### Configurações da simulação #########
 L = 1               # Comprimento do espaço em metros
 T = 1*L/c           # Tempo da simulação em segundos
-S = 1.0005               # Fator de estabilidade de Courrant
+S = 1.0005          # Fator de estabilidade de Courrant
 S_REFRAC = 0.25     # "Fator de courrant" do segundo meio
 TRANSICAO = 1       # Ponto a partir do qual começa o segundo meio
 DX = 5e-3           # Precisão do comprimento   
@@ -122,17 +122,17 @@ else: #Caso a escolha seja plotar o grafico com TIME variando
     fig.suptitle('Propagação do Pulso Variando o TIME (S = ' + str(S) + ')', fontsize=12)
     fig2.suptitle('Propagação do Pulso Variando o TIME com Foco no Início (S = ' + str(S) + ')', fontsize=12)
     T = 1.205*L/c
-    plotPulsos.plot(calculo()[-1], color='C2', label='TIME = ' + str(int(T/(S*DX/c))))
-    plotPulsos2.plot(calculo()[-1], color='C2', label='TIME = ' + str(int(T/(S*DX/c))))
-    T = 1.255*L/c
-    plotPulsos.plot(calculo()[-1], color='C1', label='TIME = ' + str(int(T/(S*DX/c))))
-    plotPulsos2.plot(calculo()[-1], color='C1', label='TIME = ' + str(int(T/(S*DX/c))))
-    T = 1.305*L/c
-    plotPulsos.plot(calculo()[-1], color='C0', label='TIME = ' + str(int(T/(S*DX/c))))
-    plotPulsos2.plot(calculo()[-1], color='C0', label='TIME = ' + str(int(T/(S*DX/c))))
-    plotPulsos2.legend()
+    plotPulsos.plot(calculo()[-1], color='black', label='TIME = ' + str(int(T/(S*DX/c))))
+    plotPulsos2.plot(calculo()[-1], color='black', label='TIME = ' + str(int(T/(S*DX/c))))
+    T = (T*c/L + 0.0495)*L/c #Incrementa o T (para incrementar o TIME)
+    plotPulsos.plot(calculo()[-1], color='gray', label='TIME = ' + str(int(T/(S*DX/c))))
+    plotPulsos2.plot(calculo()[-1], color='gray', label='TIME = ' + str(int(T/(S*DX/c))))
+    T = (T*c/L + 0.0495)*L/c #Incrementa o T (para incrementar o TIME)
+    plotPulsos.plot(calculo()[-1], color='silver', label='TIME = ' + str(int(T/(S*DX/c))))
+    plotPulsos2.plot(calculo()[-1], color='silver', label='TIME = ' + str(int(T/(S*DX/c))))
     plotPulsos.legend()
-    
+    plotPulsos2.legend()
+
     # Seta os limites para o eixo x
     plotPulsos.set_xlim(0, LEN)
     plotPulsos2.set_xlim(0, LEN/10)

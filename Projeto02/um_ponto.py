@@ -10,11 +10,10 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 # Configurações da simulação
 L = 1               # Comprimento do espaço em metros
-#T = 0.8*L/c           # Tempo da simulação em segundos (n sei se serve aqui, pq dps eu seto dois Ts pra dar bom)
-                       #posso qualquer coisa podemos deixar esse como a "base" e o outro soma um deslocamento 
-S = 1             # Fator de estabilidade de Courrant
-S_DIFF = 1.075       # "Fator de courrant" do ponto diferente
-DIFF_POS = 0.45      # Posição do ponto diferente
+T = 1.105*L/c       # Tempo da simulação em segundos
+S = 1               # Fator de estabilidade de Courrant
+S_DIFF = 1.075      # "Fator de courrant" do ponto diferente
+DIFF_POS = 0.45     # Posição do ponto diferente
 DX = 5e-3           # Precisão do comprimento
 LEN = int(L/DX)     # Quantidade de pontos do espaço simulados (automático)
 # As constantes ligadas ao tempo são determinadas por S
@@ -54,7 +53,7 @@ def calculo(S=S, S_DIFF=S_DIFF):
     E[0] = E0
     E[:, 0] = E_t
 
-    DIFF_IDX = int((DIFF_POS*LEN-2)+1)
+    DIFF_IDX = int((DIFF_POS*LEN-2)+2)
 
     # Loop principal da simulação
     for n in range(1, TIME):  # começa em 1 porque condições iniciais são conhecidas
@@ -78,13 +77,12 @@ fig.suptitle('Propagação do Pulso', fontsize=16)
 
 fig2, plotPulsos2 = plt.subplots()
 fig2.canvas.set_window_title('Figura')
-fig.suptitle('Propagação do Pulso com S diferente em 1 ponto', fontsize=12)
-fig2.suptitle('Propagação do Pulso com S diferente em 1 ponto com Foco no Início', fontsize=12)
+fig.suptitle('Propagação do Pulso com S diferente em i = ' + str(int((DIFF_POS*LEN-2)+2)), fontsize=12)
+fig2.suptitle('Propagação do Pulso com S diferente em i = ' + str(int((DIFF_POS*LEN-2)+2)) + ' com Foco no ponto', fontsize=12)
 
-T = 1.105*L/c
 plotPulsos.plot(calculo()[-1], color='C2', label='TIME = ' + str(int(T/(S*DX/c))))
 plotPulsos2.plot(calculo()[-1], color='C2', label='TIME = ' + str(int(T/(S*DX/c))))
-T = 1.155*L/c
+T = (T*c/L + 0.0495)*L/c #Incrementa o T (para incrementar o TIME)
 plotPulsos.plot(calculo()[-1], color='C1', label='TIME = ' + str(int(T/(S*DX/c))))
 plotPulsos2.plot(calculo()[-1], color='C1', label='TIME = ' + str(int(T/(S*DX/c))))
 plotPulsos2.legend()
@@ -92,7 +90,7 @@ plotPulsos.legend()
 
 # Seta os limites para o eixo x
 plotPulsos.set_xlim(0, LEN)
-plotPulsos2.set_xlim(3*LEN/10, 6*LEN/10)
+plotPulsos2.set_xlim(LEN*DIFF_POS - LEN/5, LEN*DIFF_POS + LEN/5)
 
 # Seta os limites para o eixo y
 plotPulsos2.set_ylim(-1, 1)

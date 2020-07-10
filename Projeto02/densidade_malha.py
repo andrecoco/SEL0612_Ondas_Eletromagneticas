@@ -14,7 +14,6 @@ C = scipy.constants.c
 PI = math.pi
 
 NUM_PONTOS = 1000
-#S = 0.5
 S = 1/(2**0.5)
 MIN_N = 1
 MAX_N = 80
