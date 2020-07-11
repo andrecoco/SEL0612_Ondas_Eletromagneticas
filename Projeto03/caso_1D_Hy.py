@@ -88,24 +88,46 @@ for n in range(1, TIME): # Começa em 1 porque condições iniciais são conheci
 
 ###### Plot dos Graficos ######
 fig1, ax1 = plt.subplots()
+fig1_2, ax1_2 = plt.subplots()
 fig2, ax2 = plt.subplots()
-fig1.canvas.set_window_title('Ez')
-fig1.suptitle('Componente z do Campo E', fontsize=12)
-fig2.canvas.set_window_title('Hy')
-fig2.suptitle('Componente y do Campo H', fontsize=12)
+fig2_2, ax2_2 = plt.subplots()
+fig1.canvas.set_window_title('Ez_Antes')
+fig1.suptitle('Componente z do Campo E (antes de chegar ao final da grid)', fontsize=12)
+fig1_2.canvas.set_window_title('Ez_Depois')
+fig1_2.suptitle('Componente z do Campo E (depois de chegar ao final da grid)', fontsize=12)
+fig2.canvas.set_window_title('Hy_Antes')
+fig2.suptitle('Componente y do Campo H (antes de chegar ao final da grid)', fontsize=12)
+fig2_2.canvas.set_window_title('Hy_Depois')
+fig2_2.suptitle('Componente y do Campo H (depois de chegar ao final da grid)', fontsize=12)
 
-#Plota FIG1
-ax1.plot(np.linspace(0, l, num=LEN), Ez[-1], 'r-')
+#Plota Ez
+ax1.plot(np.linspace(0, l, num=len(Ez[0])), Ez[int(TIME*0.6)], 'r-')
 ax1.set_xlabel('Comprimento (m)')
 ax1.set_ylabel('Campo Elétrico (V/m)')
+ax1_2.plot(np.linspace(0, l, num=len(Ez[0])), Ez[-1], 'r-')
+ax1_2.set_xlabel('Comprimento (m)')
+ax1_2.set_ylabel('Campo Elétrico (V/m)')
+ymax = 1.2*np.maximum(np.amax(Ez[int(TIME*0.6)]), np.amax(Ez[-1]))
+ymin = 1.2*np.minimum(np.amin(Ez[int(TIME*0.6)]), np.amin(Ez[-1]))
+ax1.set_ylim(ymin - 0.4*(ymax - ymin), ymax + 0.4*(ymax - ymin))
+ax1_2.set_ylim(ymin - 0.4*(ymax - ymin), ymax + 0.4*(ymax - ymin))
 
-#Plota FIG2
-ax2.plot(np.linspace(0, l, num=LEN), Hy[-1], 'b-')
+#Plota Hy
+ax2.plot(np.linspace(0, l, num=len(Hy[0])), Hy[int(TIME*0.6)], 'b-')
 ax2.set_xlabel('Comprimento (m)')
 ax2.set_ylabel('Campo Magnético (Tesla)')
+ax2_2.plot(np.linspace(0, l, num=len(Hy[0])), Hy[-1], 'b-')
+ax2_2.set_xlabel('Comprimento (m)')
+ax2_2.set_ylabel('Campo Magnético (Tesla)')
+ymax = np.maximum(np.amax(Hy[int(TIME*0.6)]), np.amax(Hy[-1]))
+ymin = np.minimum(np.amin(Hy[int(TIME*0.6)]), np.amin(Hy[-1]))
+ax2.set_ylim(ymin - 0.4*(ymax - ymin), ymax + 0.4*(ymax - ymin))
+ax2_2.set_ylim(ymin - 0.4*(ymax - ymin), ymax + 0.4*(ymax - ymin))
 
 ax2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+ax2_2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+
 plt.show()
 
 #Animacao
-animacao1D.plotAnimations(Ez, Hy, LEN, l, TIME)
+animacao1D.plotAnimations(Ez, Hy, len(Ez[0]), len(Hy[0]), LEN, l, TIME)

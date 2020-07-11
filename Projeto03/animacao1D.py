@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.pylab import *
 
-def plotAnimations(Ez, Hy, LEN, l, TIME, velocidade = 5, intervalo = 20):
+def plotAnimations(Ez, Hy, EzLen, HyLen, LEN, l, TIME, velocidade = 5, intervalo = 20):
     plt.style.use('seaborn-pastel')
 
     # Cria as figuras
@@ -21,12 +21,16 @@ def plotAnimations(Ez, Hy, LEN, l, TIME, velocidade = 5, intervalo = 20):
     HAnim.set_title('Componente y do Campo H')
 
     # Seta os limites para o eixo y
-    EAnim.set_ylim(-1.5,1.5)
-    HAnim.set_ylim(-0.01,0.01)
+    HyYmax = np.amax(Hy)
+    HyYmin = np.amin(Hy)
+    EzYmax = np.amax(Ez)
+    EzYmin = np.amin(Ez)
+    EAnim.set_ylim(EzYmin - 0.2*(EzYmax - EzYmin),EzYmax + 0.2*(EzYmax - EzYmin))
+    HAnim.set_ylim(HyYmin - 0.2*(HyYmax - HyYmin),HyYmax + 0.2*(HyYmax - HyYmin))
 
     # Seta os limites para o eixo x
-    EAnim.set_xlim(0,LEN)
-    HAnim.set_xlim(0,LEN+1)
+    EAnim.set_xlim(0, EzLen)
+    HAnim.set_xlim(0, HyLen)
 
     # Seta os ticklabels para o eixo x
     EAnim.set_xticklabels(EAnim.get_xticks()/LEN)
@@ -43,8 +47,8 @@ def plotAnimations(Ez, Hy, LEN, l, TIME, velocidade = 5, intervalo = 20):
     HAnim.set_ylabel("Campo Magnético (Tesla)")
 
     # Vetores utilizados como eixo x
-    EzEixoX= np.arange(LEN+1)
-    HyEixoX= np.arange(LEN)
+    EzEixoX= np.arange(EzLen)
+    HyEixoX= np.arange(HyLen)
 
     # Ajeita o Layout
     anim.tight_layout()
@@ -52,7 +56,7 @@ def plotAnimations(Ez, Hy, LEN, l, TIME, velocidade = 5, intervalo = 20):
     # Inicializa os gráficos
     p011, = EAnim.plot(Ez[0], 'r-')
     p021, = HAnim.plot(Hy[0], 'b-')
-
+    
     # Função que atualiza a animação
     def updateData(n):
         p011.set_data(EzEixoX, Ez[n*velocidade])
