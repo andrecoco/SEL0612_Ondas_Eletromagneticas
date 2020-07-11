@@ -1,34 +1,3 @@
-#ADAPTAR A DESCRIÇÃO ABAIXO
-
-"""
-Esse programa visa simular uma linha de transmissão segundo as equações do
-telegrafista através do método das diferenças finitas.
-
-O procedimento consiste em guardar gerar duas grades de pontos z,t, uma para
-tensão e uma para corrente. As grades estão desalinhadas para melhorar a
-qualidade das aproximações numéricas. Em princípio só são conhecidas as
-condições iniciais para t=0 e daí são calculados os estados da linha para
-os outros instantes de tempo.
-
-Também integrado ao programa está uma animação do resultado.
-
-Ilustração da grade (o=corrente x=tensão)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o       +
-+ |                                                     |        +
-+ |x   x   x   x   x   x   x   x   x   x   x   x   x   x|    \   +
-+ |                                                     |    |   +
-+o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o   |dt +
-+ |                                                     |    |   +
-+ |x   x   x   x   x   x   x   x   x   x   x   x   x   x|    /   +
-+ |                                                     |        +
-+o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o       +
-+ fonte      \---/                                      carga    +
-+              dz                                                +
-+                                                                +
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-"""
-
 import numpy as np
 from scipy.constants import c, mu_0, epsilon_0
 import matplotlib.pyplot as plt
