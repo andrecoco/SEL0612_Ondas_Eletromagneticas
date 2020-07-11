@@ -1,9 +1,15 @@
+"""
+Esse programa realiza a simulação de uma onda eletromagnética 1D por meio
+do algoritmo de Yee adaptado para uma dimensão
+"""
+
 import numpy as np
 from scipy.constants import c, mu_0, epsilon_0
 import matplotlib.pyplot as plt
 import animacao1D
 
 l = 1e0                 # Comprimento do espaço em metros
+T = 1.5*(l/c)           # Tempo da simulação em segundos
 SIGMA = 0               # Condutividade do meio
 SIGMA_STAR = 0          # Perda magnética equivalente
 EPSILON = epsilon_0     # Permissividade elétrica do meio
@@ -17,7 +23,7 @@ dt = dx/c  # s
 LEN = int(l/dx) #pontos
 
 #duração da simulação (Número de passos de tempo)
-TIME = int(1.5*(l/c)/dt) #pontos
+TIME = int(T/dt) #pontos
 
 #verificação de memória < 2GB (para nao dar problema no PC)
 memoria = TIME*LEN*8*2

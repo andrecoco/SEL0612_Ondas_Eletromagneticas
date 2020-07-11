@@ -1,32 +1,6 @@
-#ADAPTAR A DESCRIÇÃO ABAIXO
-
 """
-Esse programa visa simular uma linha de transmissão segundo as equações do
-telegrafista através do método das diferenças finitas.
-
-O procedimento consiste em guardar gerar duas grades de pontos z,t, uma para
-tensão e uma para corrente. As grades estão desalinhadas para melhorar a
-qualidade das aproximações numéricas. Em princípio só são conhecidas as
-condições iniciais para t=0 e daí são calculados os estados da linha para
-os outros instantes de tempo.
-
-Também integrado ao programa está uma animação do resultado.
-
-Ilustração da grade (o=corrente x=tensão)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o       +
-+ |                                                     |        +
-+ |x   x   x   x   x   x   x   x   x   x   x   x   x   x|    \   +
-+ |                                                     |    |   +
-+o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o   |dt +
-+ |                                                     |    |   +
-+ |x   x   x   x   x   x   x   x   x   x   x   x   x   x|    /   +
-+ |                                                     |        +
-+o|  o   o   o   o   o   o   o   o   o   o   o   o   o  |o       +
-+ fonte      \---/                                      carga    +
-+              dz                                                +
-+                                                                +
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Esse programa realiza a simulação de uma onda eletromagnética 2D por meio
+do algoritmo de Yee adaptado para duas dimensões
 """
 
 import numpy as np
@@ -35,6 +9,7 @@ import matplotlib.pyplot as plt
 import animacao2D
 
 l = 1e0                 # Comprimento do espaço em metros
+T = np.sqrt(2)*0.5*(l/c)# Tempo da simulação em segundos
 SIGMA = 0               # Condutividade do meio
 SIGMA_STAR = 0          # Perda magnética equivalente
 EPSILON = epsilon_0     # Permissividade elétrica do meio
@@ -50,7 +25,7 @@ dt = 1*dx/(np.sqrt(2)*c)  # s
 LEN = int(l/dx) #pontos
 
 #duração da simulação (Número de passos de tempo)
-TIME = int(np.sqrt(2)*0.5*(l/c)/dt) #pontos
+TIME = int(T/dt) #pontos
 
 #verificação de memória < 2GB (para nao dar problema no PC)
 memoria = TIME*LEN*LEN*8*3
@@ -137,7 +112,7 @@ fig4.suptitle('Componente z do Campo E (visualização em 3D antes do final da g
 fig4_2.canvas.set_window_title('Ez 3D_depois')
 fig4_2.suptitle('Componente z do Campo E (visualização em 3D após chegar no final da grid)', fontsize=10)
 
-#Plota Ez 
+#Plota Ez
 maxval = np.max(abs(Ez[int(0.6*TIME)]))
 colormap = ax1.imshow(Ez[int(0.6*TIME)], cmap=COR, vmin=-maxval, vmax=maxval)
 ax1.set_xlabel('x')
