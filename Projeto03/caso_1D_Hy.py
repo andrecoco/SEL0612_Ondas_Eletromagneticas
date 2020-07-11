@@ -60,7 +60,7 @@ Ez_t = np.zeros(TIME)
 Ez_t[0:int(0.4*(l/c)/dt)] = 1
 
 # Condições iniciais
-Ez0 = np.zeros(LEN+1)
+Ez0 = np.zeros(LEN)
 Hy0 = np.zeros(LEN)
 
 # Constantes uteis para a simulação
@@ -70,7 +70,7 @@ DA = (1-((SIGMA_STAR*dt)/(2*MU)))/(1+(SIGMA_STAR*dt)/(2*MU))
 DB = (dt/(MU*dx))/(1+(SIGMA_STAR*dt)/(2*MU))
 
 # Arrays para armazenar e processar os dados
-Ez = np.empty((TIME, LEN+1))
+Ez = np.empty((TIME, LEN))
 Ez[0] = Ez0     # Condição inicial
 Ez[:, 0] = Ez_t # Fonte na borda esquerca
 Ez[:, -1] = 0   # Condição de contorno na borda direita
@@ -82,9 +82,9 @@ print(CA, CB, DA, DB)
 
 # Loop principal da simulação
 for n in range(1, TIME): # Começa em 1 porque condições iniciais são conhecidas
-    Ez[n][1:-1] = CA*Ez[n-1][1:-1] + CB*(Hy[n-1][1:]-Hy[n-1][:-1])
-    Hy[n] = DA*Hy[n-1] + DB*(Ez[n][1:] - Ez[n][:-1])
-    Ez[n][-1] = 0
+    Ez[n][1:] = CA*Ez[n-1][1:] + CB*(Hy[n-1][1:]-Hy[n-1][:-1])
+    Hy[n][:-1] = DA*Hy[n-1][:-1] + DB*(Ez[n][1:] - Ez[n][:-1])
+    Hy[n][-1] = 0
 
 ###### Plot dos Graficos ######
 fig1, ax1 = plt.subplots()
@@ -95,7 +95,7 @@ fig2.canvas.set_window_title('Hy')
 fig2.suptitle('Componente y do Campo H', fontsize=12)
 
 #Plota FIG1
-ax1.plot(np.linspace(0, l, num=LEN+1), Ez[-1], 'r-')
+ax1.plot(np.linspace(0, l, num=LEN), Ez[-1], 'r-')
 ax1.set_xlabel('Comprimento (m)')
 ax1.set_ylabel('Campo Elétrico (V/m)')
 
